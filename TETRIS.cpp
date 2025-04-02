@@ -408,7 +408,7 @@ public:
                 shape_position = 0;
                 t = tetromino(tetris_shapes[Shape][shape_position]);
 
-                // Check for game over condition
+                // Check for game over condition 
                 if (checkCollision(t, 0, 0))
                 {
                     Gameover();
@@ -418,8 +418,9 @@ public:
             }
             case 'w':
             case 72:
-            {
-                int nextRotation = (shape_position + 1) % 4;
+            { int nextRotation;
+                if(shape_position==0) {nextRotation=3;}
+                else nextRotation = ((shape_position - 1) % 4);
                 tetromino temp(tetris_shapes[Shape][nextRotation]); // to check if rotation is causing collision
                 temp.x = t.x;
                 temp.y = t.y;
