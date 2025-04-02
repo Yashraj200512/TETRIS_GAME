@@ -5,7 +5,7 @@
 #include <chrono> // for seeding and timing
 #include <string>
 
-void setColor(int color)  //to set console text color
+void setColor(int color) // to set console text color
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, color);
@@ -13,9 +13,8 @@ void setColor(int color)  //to set console text color
 
 //  random number generator based on current time.
 std::mt19937 mt{static_cast<std::mt19937::result_type>(std::chrono::steady_clock::now().time_since_epoch().count())};
-                                                       
-std::uniform_int_distribution<int> tetris{0, 6};
 
+std::uniform_int_distribution<int> tetris{0, 6};
 
 // Tetris shapes: 7 pieces with 4 rotations each and each with 4x4 size.
 const std::string tetris_shapes[7][4][4] = {
@@ -139,8 +138,7 @@ const std::string tetris_shapes[7][4][4] = {
       " O  ",
       " O  "}}};
 
-
-class tetromino  // Tetromino class holds the current falling shape and its position and also has rotation function.
+class tetromino // Tetromino class holds the current falling shape and its position and also has rotation function.
 {
 public:
     std::string shape[4];
@@ -176,6 +174,7 @@ public:
     int level;
     int linesCleared;
     int gameSpeed;
+    int Highscore;
 
     GRID()
     {
@@ -183,6 +182,7 @@ public:
         score = 0;
         level = 1;
         linesCleared = 0;
+        Highscore = 0;
     }
     // Returns the character at a specified position.
     char getCell(int y, int x) const
@@ -206,7 +206,7 @@ public:
         coord.Y = y;
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
     }
-    
+
     void placeTetromino(const tetromino &t) // Permanently locks a tetromino into the grid when it reached bottom or on top of another shape
     {
         for (int i = 0; i < 4; i++)
@@ -222,95 +222,107 @@ public:
     }
     // Draws the grid with the falling tetromino overlaid separate from permanent grid.
     void displayWithTetromino(const tetromino &t)
-{
-   
-    char temp[22][12];  // Create a temporary copy of grid.
-    for (int i = 0; i < 22; i++)
     {
-        for (int j = 0; j < 12; j++)
+
+        char temp[22][12]; // Create a temporary copy of grid.
+        for (int i = 0; i < 22; i++)
         {
-            temp[i][j] = grid[i][j];
-        }
-    }
-    
-    for (int i = 0; i < 4; i++) //  the falling tetromino.
-    {
-        for (int j = 0; j < 4; j++)
-        {
-            if (t.shape[i][j] != ' ')
+            for (int j = 0; j < 12; j++)
             {
-                temp[t.y + i][t.x + j] = t.shape[i][j];
+                temp[i][j] = grid[i][j];
             }
-        }
-    }
-    // Set the cursor at the top left.
-    setCursorPosition(0, 0);
-   
-    for (int i = 0; i < 22; i++) // Display the grid.
-    {
-        for (int j = 0; j < 12; j++)
-        {
-            // If the cell is a boundary (*)
-            if (temp[i][j] == '*' )
-            {
-                setColor(81); // Black text on purple background for boundaries.
-            }
-            else
-            {
-                setColor(1);  // blue text (on default black background) for tetromino/empty grid.
-            }
-            std::cout << temp[i][j] << " ";
         }
 
-        // Print game statistics and control info on specific rows.
-        if (i == 5) {
-            setColor(12); // Red for label
-            std::cout << "   Score         : ";
-            setColor(15); // White for value
-            std::cout << score;
+        for (int i = 0; i < 4; i++) //  the falling tetromino.
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (t.shape[i][j] != ' ')
+                {
+                    temp[t.y + i][t.x + j] = t.shape[i][j];
+                }
+            }
         }
-        if (i == 6) {
-            setColor(12);
-            std::cout << "   Level         : ";
-            setColor(15);
-            std::cout << level;
-        }
-        if (i == 7) {
-            setColor(12);
-            std::cout << "   Lines Cleared : ";
-            setColor(15);
-            std::cout << linesCleared;
-        }
-        if (i == 10) {
-            setColor(12);
-            std::cout << "   Controls:";
-        }
-        if (i == 11) {
-            setColor(12);
-            std::cout << "   Game Speed    : ";
-            setColor(15);
-            std::cout << std::max(100, 500 - (level - 1) * 50);
-        }
-        if (i == 12) {
-            setColor(12);
-            std::cout << "   Movement      : ";
-            setColor(15);
-            std::cout << "w, a, s, d or Arrow Keys";
-        }
-        if (i == 13) {
-            setColor(12);
-            std::cout << "   Quit          : ";
-            setColor(15);
-            std::cout << "ESC";
-        }
-        
-        std::cout << "\n";
-    }
-}
+        // Set the cursor at the top left.
+        setCursorPosition(0, 0);
 
-   
-   
-    void initializeGrid()  // Initializes grid boundaries and empty spaces.
+        for (int i = 0; i < 22; i++) // Display the grid.
+        {
+            for (int j = 0; j < 12; j++)
+            {
+                // If the cell is a boundary (*)
+                if (temp[i][j] == '*')
+                {
+                    setColor(81); // Black text on purple background for boundaries.
+                }
+                else
+                {
+                    setColor(1); // blue text (on default black background) for tetromino/empty grid.
+                }
+                std::cout << temp[i][j] << " ";
+            }
+
+            // Print game statistics and control info on specific rows.
+            if (i == 5)
+            {
+                setColor(12); // Red for label
+                std::cout << "   Score         : ";
+                setColor(15); // White for value
+                std::cout << score;
+            }
+            if (i == 6)
+            {
+                setColor(12); // Red for label
+                std::cout << "   High Score    : ";
+                setColor(15); // White for value
+                std::cout << Highscore;
+            }
+            if (i == 7)
+            {
+                setColor(12);
+                std::cout << "   Level         : ";
+                setColor(15);
+                std::cout << level;
+            }
+            if (i == 8)
+            {
+                setColor(12);
+                std::cout << "   Lines Cleared : ";
+                setColor(15);
+                std::cout << linesCleared;
+            }
+            if (i == 10)
+            {
+                setColor(12);
+                std::cout << "   Controls:";
+            }
+            if (i == 11)
+            {
+                setColor(12);
+                std::cout << "   Game Speed    : ";
+                setColor(15);
+                std::cout << std::max(100, 500 - (level - 1) * 50);
+            }
+            if (i == 12)
+            {
+                setColor(12);
+                std::cout << "   Movement      : ";
+                setColor(15);
+                std::cout << "w, a, s, d or Arrow Keys";
+            }
+            if (i == 13)
+            {
+                setColor(12);
+                std::cout << "   Quit          : ";
+                setColor(15);
+                std::cout << "ESC";
+            }
+
+            std::cout << "\n";
+        }
+    }
+
+    void initializeGrid() // Initializes grid boundaries and empty spaces.
     {
         for (int i = 0; i < 22; i++)
         {
@@ -331,7 +343,6 @@ public:
             }
         }
     }
-    
 
     // Collision detection: checks if moving tetromino t by (offsetX, offsetY) causes collision.
     bool checkCollision(const tetromino &t, int offsetX, int offsetY) const
@@ -366,7 +377,7 @@ public:
             {
             case 'a':
             case 75:
-            { // Left arrow 
+            { // Left arrow
                 if (!checkCollision(t, -1, 0))
                     t.x--;
                 break;
@@ -400,9 +411,7 @@ public:
                 // Check for game over condition
                 if (checkCollision(t, 0, 0))
                 {
-                    setCursorPosition(0, 23);
-                    std::cout << "Game Over!";
-                    exit(0); // End the game
+                    Gameover();
                 }
 
                 break;
@@ -411,7 +420,7 @@ public:
             case 72:
             {
                 int nextRotation = (shape_position + 1) % 4;
-                tetromino temp(tetris_shapes[Shape][nextRotation]); //to check if rotation is causing collision
+                tetromino temp(tetris_shapes[Shape][nextRotation]); // to check if rotation is causing collision
                 temp.x = t.x;
                 temp.y = t.y;
 
@@ -423,7 +432,7 @@ public:
                 }
                 break;
             }
-            case 27://esc key
+            case 27: // esc key
                 exit(0);
                 break;
             default:
@@ -446,14 +455,14 @@ public:
                     break;
                 }
             }
-            if (isALine)//executes when entire row has no empty space
+            if (isALine) // executes when entire row has no empty space
             {
 
                 for (int y = i; y > 1; y--)
                 {
                     for (int x = 1; x < 11; x++)
                     {
-                        grid[y][x] = grid[y - 1][x];// shifts every row downwards
+                        grid[y][x] = grid[y - 1][x]; // shifts every row downwards
                     }
                 }
                 for (int x = 1; x < 11; x++)
@@ -461,10 +470,13 @@ public:
                     grid[1][x] = ' ';
                 }
                 score += 10;
+                if (Highscore < score)
+                    Highscore = score;
+
                 linesCleared++;
-                if (linesCleared % 2)
+                if (linesCleared % 2==0)
                     level++;
-                i--;//to check for same row again
+                i--; // to check for same row again
             }
         }
     }
@@ -474,13 +486,13 @@ public:
         system("cls");
         setColor(1);
         std::cout << "\n\n";
-        std::cout << "   ************************************\n";
-        std::cout << "   *                                  *\n";
+        std::cout << "   ====================================\n";
+        std::cout << "   ||                                  ||\n";
         setColor(11);
-        std::cout << "   *          WELCOME TO TETRIS       *\n";
+        std::cout << "   ||          WELCOME TO TETRIS       ||\n";
         setColor(12);
-        std::cout << "   *                                  *\n";
-        std::cout << "   ************************************\n\n";
+        std::cout << "   ||                                  ||\n";
+        std::cout << "   ====================================\n\n";
 
         setColor(2);
         std::cout << "Controls:\n";
@@ -500,60 +512,99 @@ public:
 
     int calculateFallInterval(int level)
     {
-        return std::max(100, 500 - (level - 1) * 50); //500 is starting speed
+        return std::max(100, 500 - (level - 1) * 50); // 500 is starting speed
     }
 
-    void runGame(){
-    int Shape = tetris(mt);//any of the 7 shapes
-    int shape_position = 0;//any of four positions,default=0.
-
-    tetromino t(tetris_shapes[Shape][shape_position]);
-
-    // Timer variables to control falling speed of tetromino.
-    auto lastFallTime = std::chrono::steady_clock::now();
-    
-
-    while (true)
+    void runGame()
     {
-        displayWithTetromino(t);
-        move(t, Shape, shape_position); // Processes inputs from user
-        lines();
+        int Shape = tetris(mt); // any of the 7 shapes
+        int shape_position = 0; // any of four positions,default=0.
 
-        int fallInterval = calculateFallInterval(level);
-        // Check if it's time for the tetromino to fall.
-        auto now = std::chrono::steady_clock::now();
-        int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastFallTime).count();
-        if (elapsed >= fallInterval)
+        tetromino t(tetris_shapes[Shape][shape_position]);
+
+        // Timer variables to control falling speed of tetromino.
+        auto lastFallTime = std::chrono::steady_clock::now();
+
+        while (true)
         {
-            if (checkCollision(t, 0, 1))
+            displayWithTetromino(t);
+            move(t, Shape, shape_position); // Processes inputs from user
+            lines();
+
+            int fallInterval = calculateFallInterval(level);
+            // Check if it's time for the tetromino to fall.
+            auto now = std::chrono::steady_clock::now();
+            int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastFallTime).count();
+            if (elapsed >= fallInterval)
             {
-                // Collision: lock the tetromino.
-                placeTetromino(t);
-                Shape = tetris(mt);
-                shape_position = 0;
-                t = tetromino(tetris_shapes[Shape][shape_position]);
-                // Game over condition: if new piece collides immediately.
-                if (checkCollision(t, 0, 0))
+                if (checkCollision(t, 0, 1))
                 {
-                    setCursorPosition(0, 23);
-                     setColor(2);
-                    std::cout << "  GAME OVER !  ";
-                    setCursorPosition(0, 24);
-                    std::cout<<"\n your final  score: " <<score;
+                    // Collision: lock the tetromino.
+                    placeTetromino(t);
+                    Shape = tetris(mt);
+                    shape_position = 0;
+                    t = tetromino(tetris_shapes[Shape][shape_position]);
+                    // Game over condition: if new piece collides immediately.
+                    if (checkCollision(t, 0, 0))
+                    {
+                        Gameover();
+                    }
+                }
+                else
+                {
+                    t.y++; // tetromino constantly falling down(if no collission)
+                }
+                lastFallTime = now;
+            }
+            Sleep(50); // Small sleep for smooth display and input responsiveness.
+        }
+    }
+    
+    void Gameover() //game over screen display and restart function.
+    {
+        setCursorPosition(0, 23);
+        setColor(2);
+        std::cout << "   ====================================\n";
+        setColor(10);
+        std::cout << "   ||          GAME OVER !              ||\n";
+        setColor(2);
+        std::cout << "   ====================================\n\n";
+        setColor(13);
+        std::cout << "   ====================================\n";
+        setColor(4);
+        std::cout << "          your final  score: " << score << "\n";
+        std::cout << "          your Highscore: " << Highscore << "\n";
+        std::cout << "    press [r] to restart or esc to exit" << "\n";
+        setColor(13);
+        std::cout << "   ====================================\n";
+        while (true)
+        {
+            if (kbhit()) //everything re initialized except highscore for restart.
+            {
+                char key = getch();
+                switch (key)
+                {
+                case 'r':
+                {
+                    system("cls");
+
+                    hideCursor();
+                    initializeGrid();
+                    score = 0;
+                    level = 1;
+                    linesCleared = 0;
+
+                    runGame();
                     break;
                 }
+                case 27:  exit(0); break;
+                default: std::cout<<"invalid key\n";
+                   
+                }
             }
-            else
-            {
-                t.y++; //tetromino constantly falling down(if no collission)
-            }
-            lastFallTime = now;
+            Sleep(250);
         }
-        Sleep(50); // Small sleep for smooth display and input responsiveness.
     }
-        
-    }
-    
 };
 
 int main()
@@ -564,6 +615,6 @@ int main()
     g.displayWelcomeScreen();
     system("cls");
     g.runGame();
-   
+
     return 0;
 }
