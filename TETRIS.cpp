@@ -257,7 +257,7 @@ public:
                 }
                 else
                 {
-                    setColor(1); // blue text (on default black background) for tetromino/empty grid.
+                    setColor(1); // blue text (on default black background) for tetromino.
                 }
                 std::cout << temp[i][j] << " ";
             }
@@ -344,7 +344,7 @@ public:
         }
     }
 
-    // Collision detection: checks if moving tetromino t by offsetX or offsetY causes collision.
+    // Collision detection: checks if moving tetromino t by (offsetX , offsetY) causes collision.
     bool checkCollision(const tetromino &t, int offsetX, int offsetY) const
     {
         for (int i = 0; i < 4; i++)
@@ -455,7 +455,7 @@ public:
                     break;
                 }
             }
-            if (isALine) // executes when entire row has no empty space
+            if (isALine) // executes when particular entire row has no empty space.
             {
 
                 for (int y = i; y > 1; y--)
@@ -512,12 +512,12 @@ public:
 
     int calculateFallInterval(int level)
     {
-        return std::max(100, 500 - (level - 1) * 50); // 500 is starting speed
+        return std::max(100, 500 - (level - 1) * 50); // 500 is starting speed and min is 100.
     }
 
     void runGame()
     {
-        int Shape = tetris(mt); // any of the 7 shapes
+        int Shape = tetris(mt); // any of the 7 shapes.
         int shape_position = 0; // any of four positions,default=0.
 
         tetromino t(tetris_shapes[Shape][shape_position]);
