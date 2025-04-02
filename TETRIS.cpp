@@ -469,12 +469,12 @@ public:
                 {
                     grid[1][x] = ' ';
                 }
-                score += 10;
+                score += 50;
                 if (Highscore < score)
                     Highscore = score;
 
                 linesCleared++;
-                if (linesCleared % 2==0)
+                if (linesCleared % 3==0)
                     level++;
                 i--; // to check for same row again
             }
@@ -487,11 +487,11 @@ public:
         setColor(1);
         std::cout << "\n\n";
         std::cout << "   ====================================\n";
-        std::cout << "   ||                                  ||\n";
+        std::cout << "   ||                                ||\n";
         setColor(11);
-        std::cout << "   ||          WELCOME TO TETRIS       ||\n";
+        std::cout << "   ||          WELCOME TO TETRIS     ||\n";
         
-        std::cout << "   ||                                  ||\n";
+        std::cout << "   ||                                ||\n";
         std::cout << "   ====================================\n\n";
 
         setColor(2);

@@ -1,7 +1,7 @@
 # **Tetris Game**
 
 ## Introduction
-This is a terminal-based implementation of the classic Tetris game in C++. It features shape stacking, collision detection, and a scoring system and also restart option providing an great  gaming experience.
+This is a terminal-based implementation of the classic Tetris game in C++. It features shape stacking, collision detection, and a scoring system and also restart option providing a great  gaming experience.
 
 ## Controls  
 - **Move**: `A/D` or `←/→`  
