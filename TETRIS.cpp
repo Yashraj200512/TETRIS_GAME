@@ -155,7 +155,7 @@ public:
         y = 1;
     }
 
-    void rotate(const std::string shapeArr[4])
+    void rotate(const std::string shapeArr[4]) //gets the next index of particular tetromino for rotation.
     {
         for (int i = 0; i < 4; i++)
         {
@@ -220,7 +220,7 @@ public:
             }
         }
     }
-    // Draws the grid with the falling tetromino overlaid separate from permanent grid.
+    // Draws the grid with the falling tetromino  separate from permanent grid.
     void displayWithTetromino(const tetromino &t)
     {
 
@@ -265,9 +265,9 @@ public:
             // Print game statistics and control info on specific rows.
             if (i == 5)
             {
-                setColor(12); // Red for label
+                setColor(12); // Red text
                 std::cout << "   Score         : ";
-                setColor(15); // White for value
+                setColor(15); // White text for value
                 std::cout << score;
             }
             if (i == 6)
@@ -556,7 +556,7 @@ public:
                 }
                 lastFallTime = now;
             }
-            Sleep(50); // Small sleep for smooth display and input responsiveness.
+            Sleep(50); // Small sleep for smooth display and less chances of input delay .
         }
     }
 
