@@ -1,11 +1,11 @@
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
-#include <random> // for std::mt19937 and std::random_device
-#include <chrono> // for seeding and timing
-#include <string>
+#include <random>  // for std::mt19937 (random no. generator)
+#include <chrono>  // for seeding and timing genertaor
+#include <string>  //to store tetris shapes.
 
-void setColor(int color) // to set console text color
+void setColor(int color) // for text color and boundary color.
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, color);
@@ -184,7 +184,7 @@ public:
         linesCleared = 0;
         Highscore = 0;
     }
-    // Returns the character at a specified position.
+    // Returns the character at a specified position for collision check.
     char getCell(int y, int x) const
     {
         return grid[y][x];
@@ -272,9 +272,9 @@ public:
             }
             if (i == 6)
             {
-                setColor(12); // Red for label
+                setColor(12); 
                 std::cout << "   High Score    : ";
-                setColor(15); // White for value
+                setColor(15); 
                 std::cout << Highscore;
             }
             if (i == 7)
@@ -344,7 +344,7 @@ public:
         }
     }
 
-    // Collision detection: checks if moving tetromino t by (offsetX, offsetY) causes collision.
+    // Collision detection: checks if moving tetromino t by offsetX or offsetY causes collision.
     bool checkCollision(const tetromino &t, int offsetX, int offsetY) const
     {
         for (int i = 0; i < 4; i++)
@@ -490,7 +490,7 @@ public:
         std::cout << "   ||                                  ||\n";
         setColor(11);
         std::cout << "   ||          WELCOME TO TETRIS       ||\n";
-        setColor(12);
+        
         std::cout << "   ||                                  ||\n";
         std::cout << "   ====================================\n\n";
 
@@ -559,14 +559,14 @@ public:
             Sleep(50); // Small sleep for smooth display and input responsiveness.
         }
     }
-    
+
     void Gameover() //game over screen display and restart function.
     {
         setCursorPosition(0, 23);
         setColor(2);
         std::cout << "   ====================================\n";
         setColor(10);
-        std::cout << "   ||          GAME OVER !              ||\n";
+        std::cout << "   ||          GAME OVER !           ||\n";
         setColor(2);
         std::cout << "   ====================================\n\n";
         setColor(13);
